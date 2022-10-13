@@ -70,7 +70,7 @@ class ConnectorDB:
                 sqlCon.commit()
                 sqlCon.close()
                 tkinter.messagebox.showinfo("Data Entry Form", "Record entered successfully")
-
+        # display data saved
         def DisplayData():
             sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
             cur = sqlCon.cursor()
@@ -82,7 +82,70 @@ class ConnectorDB:
                     self.student_records.insert('', END,values=row)
             sqlCon.commit()
             sqlCon.close()
+
+        def TraineeInfo(ev):
+            viewInfo = self.student_records.focus()
+            learnerData = self.student_records.item(viewInfo)
+            row = learnerData['values']
+            StudentID.set(row[0])
+            Firstname.set(row[1])
+            Surname.set(row[2])
+            Address.set(row[3])
+            Gender.set(row[4])
+            Mobile.set(row[5])
+
+        # update value(s) data
+        def update():
+            sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
+            cur = sqlCon.cursor()
+            cur.execute("update trainee set firstname = %s, surname = %s, address = %s,gender = %s,mobile = %s where stdid=%s",(
+
+                Firstname.get(),
+                Surname.get(),
+                Address.get(),
+                Gender.get(),
+                Mobile.get(),
+                StudentID.get()
+            ))
+            sqlCon.commit()
+            DisplayData()
+            sqlCon.close()
+            tkinter.messagebox.showinfo("Data Entry Form", "Record updated successfully.")
+
+        # delete row of data
+        def deleteDB():
+            sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
+            cur = sqlCon.cursor()
+            cur.execute("delete from trainee where  stdid=%s",StudentID.get())
+
+            sqlCon.commit()
+            DisplayData()
+            sqlCon.close()
+            tkinter.messagebox.showinfo("Data Entry Form", "Record successfully deleted")
+            Reset()
             
+        # search specific data by id
+        def searchDB():
+            try:
+                sqlCon = pymysql.connect(host="localhost", user="root", password="example23!", database="studentdetails")
+                cur = sqlCon.cursor()
+                cur.execute("select * from trainee where  stdid=%s", StudentID.get())
+
+                row =cur.fetchone()
+
+                StudentID.set(row[0])
+                Firstname.set(row[1])
+                Surname.set(row[2])
+                Address.set(row[3])
+                Gender.set(row[4])
+                Mobile.set(row[5])
+
+                sqlCon.commit()
+            except:
+                tkinter.messagebox.showinfo("Data Entry Form", "No such record exists")
+                Reset()
+            sqlCon.close()
+
         # ============================Widget===============================================
         self.lbltitle=Label(TitleFrame, font=("arial", 40, "bold"),  text="MySQL Connection", bd=7)
         self.lbltitle.grid(row=0, column=0, padx=132)
@@ -149,6 +212,11 @@ class ConnectorDB:
         self.student_records.column("mobile", width=70)
 
         self.student_records.pack(fill=BOTH, expand=1)
+        self.student_records.bind("<ButtonRelease-1>",TraineeInfo)
+        # DisplayData() activate this function if needed  to display data at all times
+
+
+
 
         # ========================Buttons======================================
         self.btnAddNew=Button(RightFrame1a,font=('arial',16,"bold"),text='Add New',bd=4,pady=1,padx=24,
@@ -160,15 +228,15 @@ class ConnectorDB:
         self.btnDisplay.grid(row=1, column=0, padx=1)
 
         self.btnUpdate = Button(RightFrame1a, font=('arial', 16, "bold"), text='Update', bd=4, pady=1, padx=24,
-                                width=8, height=2)
+                                width=8, height=2,command=update)
         self.btnUpdate.grid(row=2, column=0, padx=1)
 
         self.btnDelete = Button(RightFrame1a, font=('arial', 16, "bold"), text='Delete', bd=4, pady=1, padx=24,
-                                width=8, height=2)
+                                width=8, height=2, command=deleteDB)
         self.btnDelete.grid(row=3, column=0, padx=1)
 
         self.btnSearch = Button(RightFrame1a, font=('arial', 16, "bold"), text='Search', bd=4, pady=1, padx=24,
-                                width=8, height=2)
+                                width=8, height=2, command=searchDB)
         self.btnSearch.grid(row=4, column=0, padx=1)
 
         self.btnReset = Button(RightFrame1a, font=('arial', 16, "bold"), text='Reset', bd=4, pady=1, padx=24,
