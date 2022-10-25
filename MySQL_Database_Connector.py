@@ -10,7 +10,7 @@ class ConnectorDB:
         self.root.geometry("750x700+300+0")
         self.root.resizable(width=False, height=False)
 
-        MainFrame = Frame(self.root, bd=10, width=770,  height=700, relief=RIDGE, bg="cadet blue")
+        MainFrame = Frame(self.root, bd=10, width=770,  height=700, relief=RIDGE, bg="#395144")
         MainFrame.grid()
 
         TitleFrame = Frame(MainFrame, bd=7, width=770, height=100, relief=RIDGE)
@@ -18,12 +18,12 @@ class ConnectorDB:
         TopFrame3 = Frame(MainFrame, bd=5, width=770, height=500, relief=RIDGE)
         TopFrame3.grid(row=1, column=0)
 
-        LeftFrame = Frame(TopFrame3, bd=5, width=770, height=400, padx=2, bg="cadet blue", relief=RIDGE)
+        LeftFrame = Frame(TopFrame3, bd=5, width=770, height=400, padx=2, bg="#395144", relief=RIDGE)
         LeftFrame.pack(side=LEFT)
         LeftFrame1 = Frame(LeftFrame, bd=5, width=600, height=180, padx=12, pady=9, relief=RIDGE)
         LeftFrame1.pack(side=TOP)
 
-        RightFrame1= Frame(TopFrame3, bd=5, width=100, height=400, padx=2,  bg="cadet blue", relief=RIDGE)
+        RightFrame1= Frame(TopFrame3, bd=5, width=100, height=400, padx=2,  bg="#395144", relief=RIDGE)
         RightFrame1.pack(side=RIGHT)
         RightFrame1a = Frame(RightFrame1, bd=5, width=90, height=300, padx=2, pady=2,  relief=RIDGE)
         RightFrame1a.pack(side=TOP)
