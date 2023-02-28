@@ -3,6 +3,7 @@ from tkinter import ttk
 import tkinter.messagebox
 import pymysql
 
+
 class ConnectorDB:
     def __init__(self, root):
         self.root = root
@@ -10,7 +11,7 @@ class ConnectorDB:
         self.root.geometry("750x700+300+0")
         self.root.resizable(width=False, height=False)
 
-        MainFrame = Frame(self.root, bd=10, width=770,  height=700, relief=RIDGE, bg="#395144")
+        MainFrame = Frame(self.root, bd=10, width=770, height=700, relief=RIDGE, bg="#395144")
         MainFrame.grid()
 
         TitleFrame = Frame(MainFrame, bd=7, width=770, height=100, relief=RIDGE)
@@ -23,9 +24,9 @@ class ConnectorDB:
         LeftFrame1 = Frame(LeftFrame, bd=5, width=600, height=180, padx=12, pady=9, relief=RIDGE)
         LeftFrame1.pack(side=TOP)
 
-        RightFrame1= Frame(TopFrame3, bd=5, width=100, height=400, padx=2,  bg="#395144", relief=RIDGE)
+        RightFrame1 = Frame(TopFrame3, bd=5, width=100, height=400, padx=2, bg="#395144", relief=RIDGE)
         RightFrame1.pack(side=RIGHT)
-        RightFrame1a = Frame(RightFrame1, bd=5, width=90, height=300, padx=2, pady=2,  relief=RIDGE)
+        RightFrame1a = Frame(RightFrame1, bd=5, width=90, height=300, padx=2, pady=2, relief=RIDGE)
         RightFrame1a.pack(side=TOP)
         # =================================================================================
         StudentID = StringVar()
@@ -34,18 +35,19 @@ class ConnectorDB:
         Address = StringVar()
         Gender = StringVar()
         Mobile = StringVar()
+
         # ===========================Functions================================================
 
         # close app
         def iExit():
-            iExit = tkinter.messagebox.askyesno("MySQL Connection","Confirm if you want to exit")
+            iExit = tkinter.messagebox.askyesno("MySQL Connection", "Confirm if you want to exit")
             if iExit > 0:
                 root.destroy()
                 return
 
         # clear inputs
         def Reset():
-            self.entstudenttID.delete(0,END)
+            self.entstudenttID.delete(0, END)
             self.entFirstname.delete(0, END)
             self.entSurname.delete(0, END)
             self.entAddress.delete(0, END)
@@ -54,32 +56,34 @@ class ConnectorDB:
 
         # add data to database
         def addData():
-            if StudentID.get() =="" or Firstname.get()=="" or Surname.get()=="":
-                tkinter.messagebox.showerror("MySQLConnection","Enter Correct Details")
+            if StudentID.get() == "" or Firstname.get() == "" or Surname.get() == "":
+                tkinter.messagebox.showerror("MySQLConnection", "Enter Correct Details")
             else:
-                sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
+                sqlCon = pymysql.connect(host="localhost", user="root", password="example23!",
+                                         database="studentdetails")
                 cur = sqlCon.cursor()
-                cur.execute("insert into trainee values(%s,%s,%s,%s,%s,%s)",(
-                StudentID.get(),
-                Firstname.get(),
-                Surname.get(),
-                Address.get(),
-                Gender.get(),
-                Mobile.get()
+                cur.execute("insert into trainee values(%s,%s,%s,%s,%s,%s)", (
+                    StudentID.get(),
+                    Firstname.get(),
+                    Surname.get(),
+                    Address.get(),
+                    Gender.get(),
+                    Mobile.get()
                 ))
                 sqlCon.commit()
                 sqlCon.close()
                 tkinter.messagebox.showinfo("Data Entry Form", "Record entered successfully")
+
         # display data saved
         def DisplayData():
-            sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
+            sqlCon = pymysql.connect(host="localhost", user="root", password="example23!", database="studentdetails")
             cur = sqlCon.cursor()
             cur.execute("select * from trainee")
             result = cur.fetchall()
             if len(result) != 0:
                 self.student_records.delete(*self.student_records.get_children())
                 for row in result:
-                    self.student_records.insert('', END,values=row)
+                    self.student_records.insert('', END, values=row)
             sqlCon.commit()
             sqlCon.close()
 
@@ -96,17 +100,19 @@ class ConnectorDB:
 
         # update value(s) data
         def update():
-            sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
+            sqlCon = pymysql.connect(host="localhost", user="root", password="example23!", database="studentdetails")
             cur = sqlCon.cursor()
-            cur.execute("update trainee set firstname = %s, surname = %s, address = %s,gender = %s,mobile = %s where stdid=%s",(
+            cur.execute(
+                "update trainee set firstname = %s, surname = %s, address = %s,gender = %s,mobile = %s where stdid=%s",
+                (
 
-                Firstname.get(),
-                Surname.get(),
-                Address.get(),
-                Gender.get(),
-                Mobile.get(),
-                StudentID.get()
-            ))
+                    Firstname.get(),
+                    Surname.get(),
+                    Address.get(),
+                    Gender.get(),
+                    Mobile.get(),
+                    StudentID.get()
+                ))
             sqlCon.commit()
             DisplayData()
             sqlCon.close()
@@ -114,24 +120,25 @@ class ConnectorDB:
 
         # delete row of data
         def deleteDB():
-            sqlCon = pymysql.connect(host="localhost",user="root", password="example23!",database="studentdetails")
+            sqlCon = pymysql.connect(host="localhost", user="root", password="example23!", database="studentdetails")
             cur = sqlCon.cursor()
-            cur.execute("delete from trainee where  stdid=%s",StudentID.get())
+            cur.execute("delete from trainee where  stdid=%s", StudentID.get())
 
             sqlCon.commit()
             DisplayData()
             sqlCon.close()
             tkinter.messagebox.showinfo("Data Entry Form", "Record successfully deleted")
             Reset()
-            
+
         # search specific data by id
         def searchDB():
             try:
-                sqlCon = pymysql.connect(host="localhost", user="root", password="example23!", database="studentdetails")
+                sqlCon = pymysql.connect(host="localhost", user="root", password="example23!",
+                                         database="studentdetails")
                 cur = sqlCon.cursor()
                 cur.execute("select * from trainee where  stdid=%s", StudentID.get())
 
-                row =cur.fetchone()
+                row = cur.fetchone()
 
                 StudentID.set(row[0])
                 Firstname.set(row[1])
@@ -147,12 +154,12 @@ class ConnectorDB:
             sqlCon.close()
 
         # ============================Widget===============================================
-        self.lbltitle=Label(TitleFrame, font=("arial", 40, "bold"),  text="MySQL Connection", bd=7)
+        self.lbltitle = Label(TitleFrame, font=("arial", 40, "bold"), text="MySQL Connection", bd=7)
         self.lbltitle.grid(row=0, column=0, padx=132)
 
         self.lblstudenttID = Label(LeftFrame1, font=("arial", 12, "bold"), text="Student ID", bd=7)
         self.lblstudenttID.grid(row=1, column=0, sticky=W, padx=5)
-        self.entstudenttID = Entry(LeftFrame1, font=("arial", 12, "bold"),  bd=5, width=44, justify="left",
+        self.entstudenttID = Entry(LeftFrame1, font=("arial", 12, "bold"), bd=5, width=44, justify="left",
                                    textvariable=StudentID)
         self.entstudenttID.grid(row=1, column=1, sticky=W, padx=5)
 
@@ -176,9 +183,9 @@ class ConnectorDB:
 
         self.lblGender = Label(LeftFrame1, font=("arial", 12, "bold"), text="Gender", bd=5)
         self.lblGender.grid(row=5, column=0, sticky=W, padx=5)
-        self.cboGender = ttk.Combobox(LeftFrame1, font=("arial", 12, "bold"),  width=43, state="readonly",
+        self.cboGender = ttk.Combobox(LeftFrame1, font=("arial", 12, "bold"), width=43, state="readonly",
                                       textvariable=Gender)
-        self.cboGender["values"]=(" ", "Female", "Male")
+        self.cboGender["values"] = (" ", "Female", "Male")
         self.cboGender.current(0)
         self.cboGender.grid(row=5, column=1, sticky=W, padx=5)
 
@@ -191,8 +198,9 @@ class ConnectorDB:
         # ==========================Table treeview==================================
         scroll_y = Scrollbar(LeftFrame, orient=VERTICAL)
 
-        self.student_records = ttk.Treeview(LeftFrame,height=12,columns=("stdid", "firstname", "surname", "address",
-        "gender", "mobile"), yscrollcommand=scroll_y.set)
+        self.student_records = ttk.Treeview(LeftFrame, height=12, columns=("stdid", "firstname", "surname", "address",
+                                                                           "gender", "mobile"),
+                                            yscrollcommand=scroll_y.set)
 
         scroll_y.pack(side=RIGHT, fill=Y)
         self.student_records.heading("stdid", text="StudentID")
@@ -202,7 +210,7 @@ class ConnectorDB:
         self.student_records.heading("gender", text="Gender")
         self.student_records.heading("mobile", text="Mobile")
 
-        self.student_records["show"]="headings"
+        self.student_records["show"] = "headings"
 
         self.student_records.column("stdid", width=70)
         self.student_records.column("firstname", width=100)
@@ -212,23 +220,20 @@ class ConnectorDB:
         self.student_records.column("mobile", width=70)
 
         self.student_records.pack(fill=BOTH, expand=1)
-        self.student_records.bind("<ButtonRelease-1>",TraineeInfo)
+        self.student_records.bind("<ButtonRelease-1>", TraineeInfo)
         # DisplayData() activate this function if needed  to display data at all times
 
-
-
-
         # ========================Buttons======================================
-        self.btnAddNew=Button(RightFrame1a,font=('arial',16,"bold"),text='Add New',bd=4,pady=1,padx=24,
-                              width=8,height=2, command=addData)
-        self.btnAddNew.grid(row=0,column=0,padx=1)
+        self.btnAddNew = Button(RightFrame1a, font=('arial', 16, "bold"), text='Add New', bd=4, pady=1, padx=24,
+                                width=8, height=2, command=addData)
+        self.btnAddNew.grid(row=0, column=0, padx=1)
 
         self.btnDisplay = Button(RightFrame1a, font=('arial', 16, "bold"), text='Display', bd=4, pady=1, padx=24,
-                                width=8, height=2,command=DisplayData)
+                                 width=8, height=2, command=DisplayData)
         self.btnDisplay.grid(row=1, column=0, padx=1)
 
         self.btnUpdate = Button(RightFrame1a, font=('arial', 16, "bold"), text='Update', bd=4, pady=1, padx=24,
-                                width=8, height=2,command=update)
+                                width=8, height=2, command=update)
         self.btnUpdate.grid(row=2, column=0, padx=1)
 
         self.btnDelete = Button(RightFrame1a, font=('arial', 16, "bold"), text='Delete', bd=4, pady=1, padx=24,
@@ -240,18 +245,16 @@ class ConnectorDB:
         self.btnSearch.grid(row=4, column=0, padx=1)
 
         self.btnReset = Button(RightFrame1a, font=('arial', 16, "bold"), text='Reset', bd=4, pady=1, padx=24,
-                                width=8, height=2, command=Reset)
+                               width=8, height=2, command=Reset)
         self.btnReset.grid(row=5, column=0, padx=1)
 
         self.btnExit = Button(RightFrame1a, font=('arial', 16, "bold"), text='Exit', bd=4, pady=1, padx=24,
-                                width=8, height=2, command=iExit)
+                              width=8, height=2, command=iExit)
         self.btnExit.grid(row=6, column=0, padx=1)
         # =====================================================================
-
 
 
 if __name__ == '__main__':
     root = Tk()
     application = ConnectorDB(root)
     root.mainloop()
-
